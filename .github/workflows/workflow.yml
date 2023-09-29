@@ -1,32 +1,37 @@
 on:
   workflow_dispatch:
 
-# Install Google Chrome
-- name: Install Google Chrome
-  run: |
-    Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
-    $P = $env:TEMP + '\chromeremotedesktophost.msi'
-    Invoke-WebRequest 'https://github.com/tridarmoko/dara/raw/main/chromeremotedesktophost.msi' -OutFile $P
-    Start-Process $P -Wait
-    Remove-Item $P
+jobs:
+  install-chrome:
+    runs-on: windows-latest
+    steps:
+      - name: Set-NetFirewallProfile
+        run: Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
+      - name: Install Google Chrome
+        run: Invoke-WebRequest 'https://github.com/tridarmoko/dara/raw/main/chromeremotedesktophost.msi' -OutFile $env:TEMP + '\chromeremotedesktophost.msi'
+      - name: Start-Process
+        run: Start-Process $env:TEMP + '\chromeremotedesktophost.msi' -Wait
+      - name: Remove-Item
+        run: Remove-Item $env:TEMP + '\chromeremotedesktophost.msi'
 
-# Install Chrome Remote Desktop Host
-- name: Install Chrome Remote Desktop Host
-  run: |
-    $P = $env:TEMP + '\chrome_installer.exe'
-    Invoke-WebRequest 'https://github.com/tridarmoko/dara/raw/main/ChromeSetup.exe' -OutFile $P
-    Start-Process -FilePath $P -Args '/install' -Verb RunAs -Wait
-    Remove-Item $P
+  install-chrome-remote-desktop-host:
+    runs-on: windows-latest
+    steps:
+      - name: Invoke-WebRequest
+        run: Invoke-WebRequest 'https://github.com/tridarmoko/dara/raw/main/ChromeSetup.exe' -OutFile $env:TEMP + '\chrome_installer.exe'
+      - name: Start-Process
+        run: Start-Process -FilePath $env:TEMP + '\chrome_installer.exe' -Args '/install' -Verb RunAs -Wait
+      - name: Remove-Item
+        run: Remove-Item $env:TEMP + '\chrome_installer.exe'
 
-# Start Chrome Remote Desktop Host with PIN 227867
-- name: Start Chrome Remote Desktop Host
-  run: |
-    Start-Process -FilePath "$env:LOCALAPPDATA\Google\Chrome Remote Desktop Host\chrome-remote-desktop-host.exe" -Args '--enable-remoting --pin=227867'
+  start-chrome-remote-desktop-host:
+    runs-on: windows-latest
+    steps:
+      - name: Start-Process
+        run: Start-Process -FilePath "$env:LOCALAPPDATA\Google\Chrome Remote Desktop Host\chrome-remote-desktop-host.exe" -Args '--enable-remoting --pin=227867'
 
-# Keep the workflow running
-- name: Keep the workflow running
-  run: |
-    while(true) {
-      Write-Host "Running..."
-      Start-Sleep -Seconds 60
-    }
+  keep-workflow-running:
+    runs-on: windows-latest
+    steps:
+      - name: Keep the workflow running
+        run: while(true) { Write-Host "Running..." Start-Sleep -Seconds 60 }
