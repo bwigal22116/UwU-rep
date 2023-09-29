@@ -1,3 +1,6 @@
+on:
+  workflow_dispatch:
+
 # Install Google Chrome
 - name: Install Google Chrome
   run: |
@@ -27,6 +30,3 @@
       Write-Host "Running..."
       Start-Sleep -Seconds 60
     }
-
-on:
-  workflow_dispatch:
