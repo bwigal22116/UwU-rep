@@ -28,7 +28,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Start-Process
-        run: Start-Process -FilePath "$env:LOCALAPPDATA\Google\Chrome Remote Desktop Host\chrome-remote-desktop-host.exe" -Args '--enable-remoting --pin=227867'
+        run: Start-Process -FilePath "$env:LOCALAPPDATA\Google\Chrome Remote Desktop Host\chrome-remote-desktop-host.exe" -Args '--enable-remoting --pin=227867 --name=$Env:COMPUTERNAME'
 
   keep-workflow-running:
     runs-on: windows-latest
